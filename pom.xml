@@ -22,7 +22,7 @@
     </scm>
 
     <properties>
-        <export-package>org.jahia.community.sam.jgroup.probe</export-package>
+        <export-package>org.jahia.community.sam.jgroup</export-package>
         <jahia-depends>server-availability-manager</jahia-depends>
         <jahia-deploy-on-site>system</jahia-deploy-on-site>
         <jahia-module-type>system</jahia-module-type>
@@ -56,7 +56,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-RequiredExecutionEnvironment>JavaSE-11</Bundle-RequiredExecutionEnvironment>
-                        <Karaf-Commands>*</Karaf-Commands>
+                        <Karaf-Commands>org.jahia.community.sam.jgroup.commands.*</Karaf-Commands>
                         <_dsannotations>*</_dsannotations>
                     </instructions>
                 </configuration>
@@ -79,9 +79,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.graphql-java</groupId>
-            <artifactId>graphql-java-annotations</artifactId>
-            <version>${graphql-java-annotations.version}</version>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.console</artifactId>
+            <version>${karaf.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
