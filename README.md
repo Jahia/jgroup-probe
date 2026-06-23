@@ -18,7 +18,16 @@ You can configure the thresholds for warning and critical states by adding the f
 
 ```properties
 probes.JGroupNackak2Probe.undeliveredMessageYellowThreshold=100000
-probes.JGroupNackak2Probe.undeliveredMessageRedThreshold=10000000
+probes.JGroupNackak2Probe.undeliveredMessageRedThreshold=1000000
 probes.JGroupNackak2Probe.memoryUsageYellowThreshold=512MB
 probes.JGroupNackak2Probe.memoryUsageRedThreshold=1GB
+```
+
+## Karaf command
+
+The module also ships a Karaf shell command that triggers a compaction of the
+NAKACK2 retransmission table and prints the before/after statistics per cluster:
+
+```
+jgroup:compact
 ```
