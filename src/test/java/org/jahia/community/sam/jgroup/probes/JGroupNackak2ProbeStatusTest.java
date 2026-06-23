@@ -64,6 +64,32 @@ public class JGroupNackak2ProbeStatusTest {
         }
     }
 
+    @Test
+    public void getStatusEscalatesToRedWhenAHealthyBeanIsIteratedBeforeAnUnhealthyOne() throws Exception {
+        ObjectName healthy = new ObjectName("JGroupsReplication:type=protocol,cluster=clusterA,protocol=NAKACK2");
+        ObjectName unhealthy = new ObjectName("JGroupsReplication:type=protocol,cluster=clusterB,protocol=NAKACK2");
+
+        // Opposite ordering to the previous test: the GREEN bean is iterated FIRST,
+        // proving the aggregation escalates GREEN -> RED regardless of iteration order.
+        Set<ObjectName> names = new LinkedHashSet<>();
+        names.add(healthy);
+        names.add(unhealthy);
+
+        MBeanServer mbs = mock(MBeanServer.class);
+        when(mbs.queryNames(any(ObjectName.class), any())).thenReturn(names);
+
+        stubBean(mbs, healthy, 0, 0L);
+        stubBean(mbs, unhealthy, 2_000_000, 0L);
+
+        try (MockedStatic<ManagementFactory> mf = mockStatic(ManagementFactory.class)) {
+            mf.when(ManagementFactory::getPlatformMBeanServer).thenReturn(mbs);
+
+            ProbeStatus status = new JGroupNackak2Probe().getStatus();
+
+            assertEquals(ProbeStatus.Health.RED, status.getHealth());
+        }
+    }
+
     private static void stubBean(MBeanServer mbs, ObjectName name, int undelivered, long memUsage) throws Exception {
         when(mbs.getAttribute(name, Nakack2Mbean.ATTR_UNDELIVERED_MSGS)).thenReturn(undelivered);
         when(mbs.getAttribute(name, Nakack2Mbean.ATTR_SIZE_OF_ALL_MESSAGES)).thenReturn(memUsage);
