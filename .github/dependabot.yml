@@ -4,3 +4,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
+    ignore:
+      # Jahia platform version (parent) and platform-provided modules (e.g. server-availability-manager)
+      - dependency-name: "org.jahia.*"
+      # OSGi spec artifacts are provided by the platform (Felix SCR 2.1.30 / DS 1.4 on Jahia 8.2)
+      - dependency-name: "org.osgi:*"
+      # JGroups and Karaf are provided by the platform
+      - dependency-name: "org.jgroups:*"
+      - dependency-name: "org.apache.karaf*"
